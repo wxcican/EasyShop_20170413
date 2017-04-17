@@ -14,7 +14,12 @@ import android.widget.EditText;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.commons.RegexUtils;
+import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
+import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -117,7 +122,21 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()){
 
+                    String json = response.body().string();
+
+//                    Gson是一个生成和解析json数据的第三方库
+//                    生成：gson可以将一个类或者一个字符串生成为json格式的数据
+//                    解析：gson可以将json格式的数据，解析为一个类
+
+                    UserResult userResult = new Gson().fromJson(json,UserResult.class);
+
+                    Log.e("aaa","code = " + userResult.getCode());
+                    Log.e("aaa","msg = " + userResult.getMessage());
+
+
+                }
             }
         });
     }
