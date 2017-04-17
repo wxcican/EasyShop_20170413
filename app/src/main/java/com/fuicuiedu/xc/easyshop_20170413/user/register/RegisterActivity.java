@@ -134,6 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e("aaa", "网络连接失败");
+                //后台线程
             }
 
             @Override
@@ -144,6 +145,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     Log.e("aaa", "请求失败。");
                 }
+                //后台线程
             }
         });
     }
