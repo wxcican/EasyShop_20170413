@@ -14,6 +14,7 @@ import android.widget.EditText;
 
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
+import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
 import com.fuicuiedu.xc.easyshop_20170413.user.register.RegisterActivity;
 
 import java.io.IOException;
@@ -102,32 +103,16 @@ public class LoginActivity extends AppCompatActivity {
         switch (v.getId()){
             case R.id.btn_login:
 
-                OkHttpClient okHttpClient = new OkHttpClient();
-
-                RequestBody requestBody = new FormBody.Builder()
-                        .add("username",username)
-                        .add("password",password)
-                        .build();
-
-                Request request = new Request.Builder()
-                        .url("http://wx.feicuiedu.com:9094/yitao/UserWeb?method=login")
-                        .post(requestBody)
-                        .build();
-
-                okHttpClient.newCall(request).enqueue(new Callback() {
+                Call call = EasyShopClient.getInstance().login(username,password);
+                call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.e("aaa","网络连接失败");
+
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.e("aaa","网络连接失败");
-                        if (response.isSuccessful()){
-                            Log.e("aaa","服务响应成功");
-                        }else{
-                            Log.e("aaa","服务响应失败");
-                        }
+
                     }
                 });
 
