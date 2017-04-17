@@ -1,10 +1,13 @@
 package com.fuicuiedu.xc.easyshop_20170413.network;
 
+import android.util.Log;
+
 import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * 整个项目的网络模块客户端
@@ -15,15 +18,25 @@ public class EasyShopClient {
 
     private OkHttpClient okHttpClient;
 
-    private EasyShopClient(){
-        okHttpClient = new OkHttpClient();
-    }
-
     public static EasyShopClient getInstance(){
         if (easyShopClient == null){
             easyShopClient = new EasyShopClient();
         }
         return easyShopClient;
+    }
+
+
+
+    private EasyShopClient(){
+        //初始化日志拦截器
+        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+        //设置拦截级别
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        okHttpClient = new OkHttpClient.Builder()
+                //添加日志拦截器
+                .addInterceptor(httpLoggingInterceptor)
+                .build();
     }
 
     //登陆
@@ -34,7 +47,7 @@ public class EasyShopClient {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://wx.feicuiedu.com:9094/yitao/UserWeb?method=login")
+                .url(EasyShopApi.BASE_URL + EasyShopApi.LOGIN)
                 .post(requestBody)
                 .build();
 
@@ -49,7 +62,7 @@ public class EasyShopClient {
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://wx.feicuiedu.com:9094/yitao/UserWeb?method=register")
+                .url(EasyShopApi.BASE_URL + EasyShopApi.REGISTER)
                 .post(requestBody)
                 .build();
 
