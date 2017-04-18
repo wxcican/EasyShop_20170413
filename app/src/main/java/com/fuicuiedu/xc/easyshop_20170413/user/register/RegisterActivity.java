@@ -1,6 +1,8 @@
 package com.fuicuiedu.xc.easyshop_20170413.user.register;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -10,13 +12,16 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.commons.RegexUtils;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
+import com.fuicuiedu.xc.easyshop_20170413.network.UICallBack;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -114,29 +119,16 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         Call call = EasyShopClient.getInstance().register(username,password);
-        call.enqueue(new Callback() {
+        call.enqueue(new UICallBack() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailureUI(Call call, IOException e) {
 
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()){
+            public void onResponseUI(Call call, String body) {
 
-                    String json = response.body().string();
-
-//                    Gson是一个生成和解析json数据的第三方库
-//                    生成：gson可以将一个类或者一个字符串生成为json格式的数据
-//                    解析：gson可以将json格式的数据，解析为一个类
-
-                    UserResult userResult = new Gson().fromJson(json,UserResult.class);
-
-                    Log.e("aaa","code = " + userResult.getCode());
-                    Log.e("aaa","msg = " + userResult.getMessage());
-
-
-                }
+                UserResult userResult = new Gson().fromJson(body,UserResult.class);
             }
         });
     }
