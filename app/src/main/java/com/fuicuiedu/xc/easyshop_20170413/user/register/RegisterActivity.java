@@ -3,6 +3,7 @@ package com.fuicuiedu.xc.easyshop_20170413.user.register;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -17,11 +18,15 @@ import android.widget.Toast;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.commons.RegexUtils;
+import com.fuicuiedu.xc.easyshop_20170413.components.AlertDialogFragment;
+import com.fuicuiedu.xc.easyshop_20170413.components.ProgressDialogFragment;
+import com.fuicuiedu.xc.easyshop_20170413.main.MainActivity;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
 import com.fuicuiedu.xc.easyshop_20170413.network.UICallBack;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,7 +44,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends MvpActivity<RegisterView,RegisterPresenter> implements RegisterView{
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -56,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
     private String password;
     private String pwd_again;
     private ActivityUtils activityUtils;
+    private ProgressDialogFragment dialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +72,12 @@ public class RegisterActivity extends AppCompatActivity {
 
         init();
 
+    }
+
+    @NonNull
+    @Override
+    public RegisterPresenter createPresenter() {
+        return new RegisterPresenter();//创建注册的业务类
     }
 
     private void init() {
@@ -118,18 +130,52 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        Call call = EasyShopClient.getInstance().register(username,password);
-        call.enqueue(new UICallBack() {
-            @Override
-            public void onFailureUI(Call call, IOException e) {
+        //业务类执行注册的业务
+        presenter.register(username,password);
 
-            }
+    }
 
-            @Override
-            public void onResponseUI(Call call, String body) {
 
-                UserResult userResult = new Gson().fromJson(body,UserResult.class);
-            }
-        });
+    //###################################   视图接口的实现   ######################
+    @Override
+    public void showPrb() {
+        //关闭软键盘
+        activityUtils.hideSoftKeyboard();
+        //进度条
+        //初始化进度条
+        if (dialogFragment == null)dialogFragment = new ProgressDialogFragment();
+        //如果进度条已经显示，则跳出
+        if (dialogFragment.isVisible()) return;
+        //否则进度条显示
+        dialogFragment.show(getSupportFragmentManager(),"dialogFragment");
+    }
+
+    @Override
+    public void hidePrb() {
+        dialogFragment.dismiss();
+    }
+
+    @Override
+    public void registerSuccess() {
+        //成功跳转到主页
+        activityUtils.startActivity(MainActivity.class);
+        finish();
+    }
+
+    @Override
+    public void registerFailed() {
+        et_userName.setText("");
+    }
+
+    @Override
+    public void showMsg(String msg) {
+        activityUtils.showToast(msg);
+    }
+
+    @Override
+    public void showUserPasswordError(String msg) {
+        //展示弹窗，提示错误信息
+        AlertDialogFragment fragment = AlertDialogFragment.newInstance(msg);
+        fragment.show(getSupportFragmentManager(),getString(R.string.username_pwd_rule));
     }
 }

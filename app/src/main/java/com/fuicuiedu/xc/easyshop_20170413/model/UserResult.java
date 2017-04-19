@@ -3,8 +3,8 @@ package com.fuicuiedu.xc.easyshop_20170413.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * "code": 1,
- * "msg": "succeed",
+ * "code": 1,                   //结果码
+ * "msg": "succeed",                //描述信息
  * "data": {
          * "username": "xc62",
          * "name": "yt59856b15cf394e7b84a7d48447d16098",
