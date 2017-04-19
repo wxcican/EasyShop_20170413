@@ -1,5 +1,7 @@
 package com.fuicuiedu.xc.easyshop_20170413.user.login;
 
+import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
+import com.fuicuiedu.xc.easyshop_20170413.model.User;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
 import com.fuicuiedu.xc.easyshop_20170413.network.UICallBack;
@@ -16,7 +18,7 @@ import okhttp3.Call;
 
 public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView>{
 
-    // TODO: 2017/4/19 0019 环信相关 
+    // TODO: 2017/4/19 0019 环信相关
 
     private Call call;
 
@@ -40,7 +42,9 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView>{
             public void onResponseUI(Call call, String body) {
                 UserResult userResult = new Gson().fromJson(body,UserResult.class);
                 if (userResult.getCode() == 1){
-                    // TODO: 2017/4/19 0019 保存用户登录信息到本地配置
+                    //保存用户登录信息到本地配置
+                    User user = userResult.getUser();
+                    CachePreferences.setUser(user);
                     getView().loginSuccess();
                     getView().showMsg("登录成功");
                 }else if (userResult.getCode() == 2){
