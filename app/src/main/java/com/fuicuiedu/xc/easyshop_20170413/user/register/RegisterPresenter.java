@@ -57,7 +57,7 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView>{
                     //成功提示
                     getView().showMsg("注册成功");
                     //用户信息保存到本地配置当中
-                    User user = result.getUser();
+                    User user = result.getData();
                     CachePreferences.setUser(user);
                     //执行注册成功的方法
                     getView().registerSuccess();

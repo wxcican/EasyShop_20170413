@@ -18,7 +18,7 @@ public class UserResult {
     private int code;
     @SerializedName("msg")
     private String message;
-    private User user;
+    private User data;
 
     public int getCode() {
         return code;
@@ -36,11 +36,11 @@ public class UserResult {
         this.message = message;
     }
 
-    public User getUser() {
-        return user;
+    public User getData() {
+        return data;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setData(User data) {
+        this.data = data;
     }
 }

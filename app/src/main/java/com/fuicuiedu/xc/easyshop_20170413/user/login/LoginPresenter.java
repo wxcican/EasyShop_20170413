@@ -1,5 +1,7 @@
 package com.fuicuiedu.xc.easyshop_20170413.user.login;
 
+import android.util.Log;
+
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
 import com.fuicuiedu.xc.easyshop_20170413.model.User;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
@@ -43,7 +45,8 @@ public class LoginPresenter extends MvpNullObjectBasePresenter<LoginView>{
                 UserResult userResult = new Gson().fromJson(body,UserResult.class);
                 if (userResult.getCode() == 1){
                     //保存用户登录信息到本地配置
-                    User user = userResult.getUser();
+                    User user = userResult.getData();
+                    Log.e("aaa","name = " + user.getName());
                     CachePreferences.setUser(user);
                     getView().loginSuccess();
                     getView().showMsg("登录成功");
