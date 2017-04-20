@@ -7,6 +7,9 @@ import com.google.gson.annotations.SerializedName;
  "name": "yt59856b15cf394e7b84a7d48447d16098",   环信id
  "uuid": "0F8EC12223174657B2E842076D54C361",    环信uuid
  "password": "123456"
+
+ "other": "/images/0F8EC12223174657B2E842076D54C361/9B61E85244.jpg",
+ "nickname": "555",
  */
 
 public class User {
@@ -18,6 +21,27 @@ public class User {
     @SerializedName("uuid")
     private String table_Id;
     private String password;
+
+    @SerializedName("other")
+    private String head_Image;
+    @SerializedName("nickname")
+    private String nick_name;
+
+    public String getHead_Image() {
+        return head_Image;
+    }
+
+    public void setHead_Image(String head_Image) {
+        this.head_Image = head_Image;
+    }
+
+    public String getNick_name() {
+        return nick_name;
+    }
+
+    public void setNick_name(String nick_name) {
+        this.nick_name = nick_name;
+    }
 
     public String getName() {
         return name;

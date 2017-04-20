@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
+import com.fuicuiedu.xc.easyshop_20170413.main.me.personInfo.PersonActivity;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
 import com.fuicuiedu.xc.easyshop_20170413.user.login.LoginActivity;
 
@@ -54,7 +55,7 @@ public class MeFragment extends Fragment {
             case R.id.tv_login:
             case R.id.tv_person_info:
                 //跳转到个人信息页面
-
+                activityUtils.startActivity(PersonActivity.class);
                 break;
             case R.id.tv_person_goods:
                 //跳转到我的商品页面
