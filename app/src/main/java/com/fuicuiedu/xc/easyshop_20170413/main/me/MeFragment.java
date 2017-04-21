@@ -6,13 +6,19 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
+import com.fuicuiedu.xc.easyshop_20170413.components.AvatarLoadOptions;
 import com.fuicuiedu.xc.easyshop_20170413.main.me.personInfo.PersonActivity;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
+import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopApi;
 import com.fuicuiedu.xc.easyshop_20170413.user.login.LoginActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -21,6 +27,11 @@ import butterknife.OnClick;
  */
 
 public class MeFragment extends Fragment {
+
+    @BindView(R.id.iv_user_head)
+    ImageView iv_user_head;//用户头像
+    @BindView(R.id.tv_login)
+    TextView tv_login;//用户名
 
     private ActivityUtils activityUtils;
     private View view;
@@ -39,7 +50,17 @@ public class MeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        // TODO: 2017/4/20 0020 判断是否登录，显示昵称和头像 
+        //判断是否登录，显示昵称和头像
+        if (CachePreferences.getUser().getName() == null) return;//未登录，跳出
+        //刚注册还没有昵称和头像
+        if (CachePreferences.getUser().getNick_name() == null) {
+            tv_login.setText("请输入昵称");
+        }else{
+            tv_login.setText(CachePreferences.getUser().getNick_name());
+        }
+        ImageLoader.getInstance()
+                .displayImage(EasyShopApi.IMAGE_URL + CachePreferences.getUser().getHead_Image()
+                        ,iv_user_head, AvatarLoadOptions.build());
     }
 
     @OnClick({R.id.iv_user_head,R.id.tv_person_info, R.id.tv_login, R.id.tv_person_goods, R.id.tv_goods_upload})

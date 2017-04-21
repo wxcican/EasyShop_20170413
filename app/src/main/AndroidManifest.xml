@@ -31,6 +31,7 @@
         <activity android:name=".user.login.LoginActivity" />
         <activity android:name=".user.register.RegisterActivity" />
         <activity android:name=".main.me.personInfo.PersonActivity"></activity>
+        <activity android:name=".main.me.personInfo.NickNameActivity"/>
     </application>
 
 </manifest>
