@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".EasyShopApplication"
         android:allowBackup="true"
@@ -30,8 +29,9 @@
         </activity>
         <activity android:name=".user.login.LoginActivity" />
         <activity android:name=".user.register.RegisterActivity" />
-        <activity android:name=".main.me.personInfo.PersonActivity"></activity>
-        <activity android:name=".main.me.personInfo.NickNameActivity"/>
+        <activity android:name=".main.me.personInfo.PersonActivity" />
+        <activity android:name=".main.me.personInfo.NickNameActivity" />
+        <activity android:name=".main.shop.details.GoodsDetailActivity"></activity>
     </application>
 
 </manifest>
