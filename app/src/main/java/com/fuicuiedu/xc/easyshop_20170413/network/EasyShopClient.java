@@ -159,6 +159,19 @@ public class EasyShopClient {
                 .build();
 
         return okHttpClient.newCall(request);
+    }
 
+    //删除商品
+    public Call deleteGoods(String uuid){
+        RequestBody requestBody = new FormBody.Builder()
+                .add("uuid",uuid)
+                .build();
+
+        Request request = new Request.Builder()
+                .url(EasyShopApi.BASE_URL + EasyShopApi.DELETE)
+                .post(requestBody)
+                .build();
+
+        return okHttpClient.newCall(request);
     }
 }
