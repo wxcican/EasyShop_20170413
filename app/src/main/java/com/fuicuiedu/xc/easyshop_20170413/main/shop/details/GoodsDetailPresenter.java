@@ -60,5 +60,5 @@ public class GoodsDetailPresenter extends MvpNullObjectBasePresenter<GoodsDetail
         });
     }
 
-    //删除商品
+    // TODO: 2017/4/24 0024  删除商品
 }
