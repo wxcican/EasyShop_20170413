@@ -5,10 +5,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 
+import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.model.ImageItem;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2017/4/25 0025.
@@ -81,35 +89,92 @@ public class GoodsUpLoadAdapter extends RecyclerView.Adapter{
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-//        if (viewType == ???){
-//            ????
-//        }
-        return null;
+        //判断当前显示item的类型，有图或者无图，从而选择不同的ViewHoler（不同的布局）
+        if (viewType == ITEM_TYPE.ITEM_NORMAL.ordinal()){
+            //有图的ViewHolder
+            return new ItemSelectViewHolder(
+                    inflater.inflate(R.layout.layout_item_recyclerview,parent,false));
+        }else{
+            //无图，显示加号的ViewHolder
+            return new ItemAddViewHolder(
+                    inflater.inflate(R.layout.layout_item_recyclerviewlast,parent,false)
+            );
+        }
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        //判断当前的vh是不是ItemSelectViewHolder的实例
+        if (holder instanceof ItemSelectViewHolder){
+            //当前数据
+            ImageItem imageItem = list.get(position);
+            //拿到当前vh(因为已经判断是vh的实例，所以强转)
+            ItemSelectViewHolder item_select = (ItemSelectViewHolder) holder;
+            item_select.photo = imageItem;
+            //判断模式（正常，可删除）
+            if (mode == MODE_MULTI_SELECT){
+                //可选框可见
+                item_select.checkBox.setVisibility(View.VISIBLE);
+                //可选框的选择监听
+                item_select.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        //imageitem中选择状态改变
+                        list.get(position).setIsCheck(isChecked);
+                    }
+                });
+                //可选框的改变（根据imageitem的选择状态）
+                item_select.checkBox.setChecked(imageItem.isCheck());
+            }else if(mode == MODE_NORMAL){
+                //可选框隐藏
+                item_select.checkBox.setVisibility(View.GONE);
+            }
+            //图片设置
+            item_select.ivPhoto.setImageBitmap(imageItem.getBitmap());
+            // TODO: 2017/4/25 0025 单击图片跳转到图片展示页
+            // TODO: 2017/4/25 0025 长摁图片改为可删除模式
+        }
 
+        //判断当前的vh是不是ItemAddViewHolder的实例
+        else if (holder instanceof ItemAddViewHolder){
+            ItemAddViewHolder item_add = (ItemAddViewHolder) holder;
+            //最多八张图
+            if (position == 8){
+                item_add.ib_add.setVisibility(View.GONE);
+            }else{
+                item_add.ib_add.setVisibility(View.VISIBLE);
+            }
+            // TODO: 2017/4/25 0025 点击添加图片
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        //最多八张图
+        return Math.min(list.size() + 1,8);
     }
 
     //显示添加按钮的ViewHolder
     public static class ItemAddViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.ib_recycle_add)ImageButton ib_add;
 
         public ItemAddViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 
     //已经有图片的ViewHolder
     public static class ItemSelectViewHolder extends RecyclerView.ViewHolder{
+        @BindView(R.id.iv_photo)
+        ImageView ivPhoto;
+        @BindView(R.id.cb_check_photo)
+        CheckBox checkBox;
+        ImageItem photo;//用来控制checkbox的选择属性
 
         public ItemSelectViewHolder(View itemView) {
             super(itemView);
+            ButterKnife.bind(this,itemView);
         }
     }
 }
