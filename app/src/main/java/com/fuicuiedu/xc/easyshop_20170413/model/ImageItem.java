@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class ImageItem implements Serializable {
     /**
      * 图片路径
-     */
+    */
     public String imagePath;
 
     /**
