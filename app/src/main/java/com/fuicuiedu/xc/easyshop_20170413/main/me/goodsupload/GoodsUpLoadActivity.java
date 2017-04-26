@@ -172,7 +172,11 @@ public class GoodsUpLoadActivity extends MvpActivity<GoodsUpLoadView, GoodsUpLoa
         @Override
         public void onPhotoClicked(ImageItem photo, ImageView imageView) {
             //有图，单击，跳转到图片展示页
-            // TODO: 2017/4/26 0026  跳转到图片展示页
+            Intent intent = new Intent(GoodsUpLoadActivity.this,GoodsUpLoadImageShowActivity.class);
+            intent.putExtra("images",photo.getBitmap());
+            intent.putExtra("width",imageView.getWidth());
+            intent.putExtra("height",imageView.getHeight());
+            startActivity(intent);
         }
 
         @Override
