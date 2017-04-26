@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.components.AvatarLoadOptions;
+import com.fuicuiedu.xc.easyshop_20170413.main.me.goodsupload.GoodsUpLoadActivity;
 import com.fuicuiedu.xc.easyshop_20170413.main.me.personInfo.PersonActivity;
 import com.fuicuiedu.xc.easyshop_20170413.main.me.persongoods.PersonGoodsActivity;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
@@ -85,7 +86,7 @@ public class MeFragment extends Fragment {
                 break;
             case R.id.tv_goods_upload:
                 //跳转到商品上传的页面
-                activityUtils.showToast("跳转到商品上传的页面，待实现");
+                activityUtils.startActivity(GoodsUpLoadActivity.class);
                 break;
 
         }
