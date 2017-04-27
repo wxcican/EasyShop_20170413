@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import com.feicuiedu.apphx.model.HxUserManager;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.components.AvatarLoadOptions;
@@ -24,6 +25,7 @@ import com.fuicuiedu.xc.easyshop_20170413.model.ItemShow;
 import com.fuicuiedu.xc.easyshop_20170413.model.User;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopApi;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
+import com.hyphenate.easeui.controller.EaseUI;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import org.hybridsquad.android.library.CropHandler;
@@ -145,7 +147,10 @@ public class PersonActivity extends MvpActivity<PersonView, PersonPersenter> imp
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
 
-                // TODO: 2017/4/20 0020 退出环信相关
+                //退出环信相关
+                HxUserManager.getInstance().asyncLogout();
+                //登出关掉通知栏中的通知
+                EaseUI.getInstance().getNotifier().reset();
         }
     }
 

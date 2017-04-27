@@ -1,8 +1,11 @@
 package com.fuicuiedu.xc.easyshop_20170413.main.me.personInfo;
 
+import com.feicuiedu.apphx.model.HxMessageManager;
+import com.feicuiedu.apphx.model.HxUserManager;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
 import com.fuicuiedu.xc.easyshop_20170413.model.User;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
+import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopApi;
 import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
 import com.fuicuiedu.xc.easyshop_20170413.network.UICallBack;
 import com.google.gson.Gson;
@@ -56,7 +59,9 @@ public class PersonPersenter extends MvpNullObjectBasePresenter<PersonView> {
                 //上传成功，触发UI操作（更新头像）
                 getView().updataAvatar(result.getData().getHead_Image());
 
-                // TODO: 2017/4/20 0020 环信更新头像 
+                //环信更新头像
+                HxUserManager.getInstance().updateAvatar(EasyShopApi.IMAGE_URL + result.getData().getHead_Image());
+                HxMessageManager.getInstance().sendAvatarUpdateMessage(EasyShopApi.IMAGE_URL + result.getData().getHead_Image());
             }
         });
     }

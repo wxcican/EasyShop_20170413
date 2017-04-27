@@ -15,8 +15,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.feicuiedu.apphx.model.repository.DefaultLocalUsersRepo;
+import com.feicuiedu.apphx.presentation.chat.HxChatActivity;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
+import com.fuicuiedu.xc.easyshop_20170413.commons.CurrentUser;
 import com.fuicuiedu.xc.easyshop_20170413.components.AvatarLoadOptions;
 import com.fuicuiedu.xc.easyshop_20170413.components.ProgressDialogFragment;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
@@ -131,8 +134,14 @@ public class GoodsDetailActivity extends MvpActivity<GoodsDetailView,GoodsDetail
         switch (view.getId()){
             //发消息
             case R.id.btn_detail_message:
-                // TODO: 2017/4/21 0021 跳转到环信发消息的页面
-                activityUtils.showToast("跳转到环信发消息的页面,待实现");
+                //根据环信Id判断商品归属，自己不能给自己发消息
+                if (goods_user.getHx_Id().equals(CachePreferences.getUser().getHx_Id())){
+                    activityUtils.showToast("这是商品时自己发布的哦！");
+                    return;
+                }
+                //跳转到环信发消息的页面
+                DefaultLocalUsersRepo.getInstance(this).save(CurrentUser.convert(goods_user));
+                startActivity(HxChatActivity.getStartIntent(GoodsDetailActivity.this,goods_user.getHx_Id()));
                 break;
             //删除
             case R.id.tv_goods_delete:

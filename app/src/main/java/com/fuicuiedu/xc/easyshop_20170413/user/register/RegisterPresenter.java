@@ -1,5 +1,10 @@
 package com.fuicuiedu.xc.easyshop_20170413.user.register;
 
+import com.feicuiedu.apphx.model.HxUserManager;
+import com.feicuiedu.apphx.model.event.HxErrorEvent;
+import com.feicuiedu.apphx.model.event.HxEventType;
+import com.feicuiedu.apphx.model.event.HxSimpleEvent;
+import com.fuicuiedu.xc.easyshop_20170413.commons.CurrentUser;
 import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
 import com.fuicuiedu.xc.easyshop_20170413.model.User;
 import com.fuicuiedu.xc.easyshop_20170413.model.UserResult;
@@ -7,6 +12,11 @@ import com.fuicuiedu.xc.easyshop_20170413.network.EasyShopClient;
 import com.fuicuiedu.xc.easyshop_20170413.network.UICallBack;
 import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.mvp.MvpNullObjectBasePresenter;
+import com.hyphenate.easeui.domain.EaseUser;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -16,23 +26,32 @@ import okhttp3.Call;
  * Created by Administrator on 2017/4/19 0019.
  */
 
-public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView>{
+public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> {
 
     //业务，执行网络请求，完成注册
     //在特定的地方，触发对应UI操作
 
-    // TODO: 2017/4/19 0019 环信相关
+    //环信相关
+    private String hxPassword;
 
     private Call call;
+
+    @Override
+    public void attachView(RegisterView view) {
+        super.attachView(view);
+        EventBus.getDefault().register(this);
+    }
 
     //视图销毁，取消网络请求
     @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
         if (call != null) call.cancel();
+        EventBus.getDefault().unregister(this);
     }
 
-    public void register(String username, String password){
+    public void register(String username, String password) {
+        hxPassword = password;
         //显示进度条
         getView().showPrb();
 
@@ -51,25 +70,47 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView>{
                 //隐藏进度条
                 getView().hidePrb();
                 //拿到返回结果
-                UserResult result = new Gson().fromJson(body,UserResult.class);
+                UserResult result = new Gson().fromJson(body, UserResult.class);
                 //根据不同的结果吗码处理
-                if (result.getCode() == 1){
+                if (result.getCode() == 1) {
                     //成功提示
                     getView().showMsg("注册成功");
                     //用户信息保存到本地配置当中
                     User user = result.getData();
                     CachePreferences.setUser(user);
-                    //执行注册成功的方法
-                    getView().registerSuccess();
-                }else if (result.getCode() == 2){
+
+                    //登录环信相关操作（会通过EventBus返回值）
+                    EaseUser easeUser = CurrentUser.convert(user);
+                    HxUserManager.getInstance().asyncLogin(easeUser, hxPassword);
+                } else if (result.getCode() == 2) {
                     //提示失败信息
                     getView().showMsg(result.getMessage());
                     //执行注册失败的方法
                     getView().registerFailed();
-                }else{
+                } else {
                     getView().showMsg("未知错误！");
                 }
             }
         });
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(HxSimpleEvent event) {
+        //判断是否是登录成功事件
+        if (event.type != HxEventType.LOGIN) return;
+
+        hxPassword = null;
+        //调用注册成功的方法
+        getView().registerSuccess();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(HxErrorEvent event) {
+        //判断是否是登录成功事件
+        if (event.type != HxEventType.LOGIN) return;
+
+        hxPassword = null;
+        getView().hidePrb();
+        getView().showMsg(event.toString());
     }
 }

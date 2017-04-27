@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 
+import com.feicuiedu.apphx.presentation.contact.list.HxContactListFragment;
+import com.feicuiedu.apphx.presentation.conversation.HxConversationListFragment;
 import com.fuicuiedu.xc.easyshop_20170413.R;
 import com.fuicuiedu.xc.easyshop_20170413.commons.ActivityUtils;
 import com.fuicuiedu.xc.easyshop_20170413.main.me.MeFragment;
 import com.fuicuiedu.xc.easyshop_20170413.main.shop.ShopFragment;
+import com.fuicuiedu.xc.easyshop_20170413.model.CachePreferences;
 
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -46,7 +49,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void init() {
-        viewPager.setAdapter(unLoginAdapter);
+        //判断用户是否登录，从而选择不同的匹配器
+        if (CachePreferences.getUser().getName() == null) {
+            viewPager.setAdapter(unLoginAdapter);
+            viewPager.setCurrentItem(0);
+        } else {
+            viewPager.setAdapter(loginAdapter);
+            viewPager.setCurrentItem(0);
+        }
 
         //刚进来默认选择市场
         textViews[0].setSelected(true);
@@ -74,7 +84,34 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // TODO: 2017/4/14 0014 用户已经登录的适配器
+    //用户已经登录的适配器
+    private FragmentStatePagerAdapter loginAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                //市场
+                case 0:
+                    return new ShopFragment();
+                //消息
+                case 1:
+                    return new HxConversationListFragment();
+                //通讯录
+                case 2:
+                    return new HxContactListFragment();
+                //我的
+                case 3:
+                    return new MeFragment();
+            }
+            return null;
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
+    };
+
+
     //用户未登录时的适配器
     private FragmentStatePagerAdapter unLoginAdapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
         @Override
