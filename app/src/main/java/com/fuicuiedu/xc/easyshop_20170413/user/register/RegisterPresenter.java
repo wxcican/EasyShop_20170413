@@ -42,6 +42,9 @@ public class RegisterPresenter extends MvpNullObjectBasePresenter<RegisterView> 
         EventBus.getDefault().register(this);
     }
 
+
+
+
     //视图销毁，取消网络请求
     @Override
     public void detachView(boolean retainInstance) {
